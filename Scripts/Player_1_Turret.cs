@@ -9,6 +9,8 @@ public class Player_1_Turret : MonoBehaviour {
 	public Object bullet;
 	public GUIStyle TURRET_FIRE;
 	public float randTime_CoolDown;
+	public AudioClip death;
+	public AudioClip fired;
 	
 	// Creates a vector to position the health and cooldown bars for each turret
 	protected Vector3 TurPos;
@@ -38,12 +40,10 @@ public class Player_1_Turret : MonoBehaviour {
 	}
 	void OnGUI()
 	{
-		
 		if (coolDown <= 0)
 		{
 			GUI.Label(new Rect(TurPos.x - 100,670,500,200),"READY");
 		}
-		
 		// Health Bar
 		GUI.BeginGroup(new Rect(0,0,Screen.width,Screen.height),"");
 			GUI.color = Color.red;
@@ -88,10 +88,11 @@ public class Player_1_Turret : MonoBehaviour {
 		if (coolDown <= 0)
 		{
 			Debug.Log("FIRED");
+			AudioSource.PlayClipAtPoint(fired,transform.position);
 			GameObject newBullet = (GameObject)Instantiate(bullet);
 			newBullet.transform.position = Turret_Barrel.transform.position;
 			newBullet.rigidbody.AddForce(Turret_Barrel.transform.forward * 5000.0f);
-			randTime_CoolDown = Random.Range(5.0f,10.0f);
+			randTime_CoolDown = Random.Range(3.0f,5.0f);
 			coolDown = randTime_CoolDown;
 		}
 	}
@@ -109,6 +110,7 @@ public class Player_1_Turret : MonoBehaviour {
 		if (turHealth <= 0)
 		{
 			Destroy(this.gameObject);
+			AudioSource.PlayClipAtPoint(death,transform.position);
 		}
 	}
 }

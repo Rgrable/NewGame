@@ -9,6 +9,8 @@ public class Enemy_Turret : MonoBehaviour {
 	public Object bullet;
 	public float randTime_CoolDown;
 	private float ComputerTime;
+	public AudioClip death;
+	public AudioClip fired;
 	
 	// Creates a vector to position the health and cooldown bars for each turret
 	protected Vector3 TurPos;
@@ -87,6 +89,7 @@ public class Enemy_Turret : MonoBehaviour {
 		if (coolDown <= 0)
 		{
 			Debug.Log("FIRED");
+			AudioSource.PlayClipAtPoint(fired,transform.position);
 			GameObject newBullet = (GameObject)Instantiate(bullet);
 			newBullet.transform.position = Turret_Barrel.transform.position;
 			newBullet.rigidbody.AddForce(Turret_Barrel.transform.forward * 5000.0f);
@@ -108,6 +111,7 @@ public class Enemy_Turret : MonoBehaviour {
 		if (turHealth <= 0)
 		{
 			Destroy(this.gameObject);
+			AudioSource.PlayClipAtPoint(death,transform.position);
 		}
 	}
 }

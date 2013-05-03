@@ -2,7 +2,10 @@ using UnityEngine;
 using System.Collections;
 
 public class Ricochet : MonoBehaviour {
-
+	private float hitTimer = 0.4f; // makes sure that the ball doesnt get stuck ricocheting
+	private bool hitBool;
+	public AudioClip bounce;
+	
 	void Update () {
 		
 		Destroy(this.gameObject,30.0f);
@@ -13,28 +16,48 @@ public class Ricochet : MonoBehaviour {
 	protected virtual void CheckBounds(GameObject camera)
 	{
 		Vector3 newVelocity = transform.rigidbody.velocity;
-		if (transform.position.x <= -215)
+		if (!hitBool)
 		{
-			newVelocity.x *= -1.1f;
-			transform.rigidbody.velocity = newVelocity;
+			if (transform.position.x < -215)
+			{
+				newVelocity.x *= -1.0f;
+				transform.rigidbody.velocity = newVelocity;
+				hitBool = true;
+				AudioSource.PlayClipAtPoint(bounce,transform.position);
+			}
+			else if (transform.position.x > 215)
+			{
+				newVelocity.x *= -1.0f;
+				transform.rigidbody.velocity = newVelocity;
+				hitBool = true;
+				AudioSource.PlayClipAtPoint(bounce,transform.position);
+			}
+			else if (transform.position.z > camera.transform.position.z + 117)
+			{
+				newVelocity.z *= -1.0f;
+				transform.rigidbody.velocity = newVelocity;
+				hitBool = true;
+				AudioSource.PlayClipAtPoint(bounce,transform.position);
+			}
+			else if (transform.position.z < camera.transform.position.z - 117)
+			{
+				newVelocity.z *= -1.0f;
+				transform.rigidbody.velocity = newVelocity;
+				hitBool = true;
+				AudioSource.PlayClipAtPoint(bounce,transform.position);
+			}
 		}
-		else if (transform.position.x >= 215)
-		{
-			newVelocity.x *= -1.1f;
-			transform.rigidbody.velocity = newVelocity;
-		}
-		else if (transform.position.z >= camera.transform.position.z + 114)
-		{
-			newVelocity.z *= -1.1f;
-			transform.rigidbody.velocity = newVelocity;
-		}
-		else if (transform.position.z <= camera.transform.position.z - 114)
-		{
-			newVelocity.z *= -1.1f;
-			transform.rigidbody.velocity = newVelocity;
-		}
+		else
+			Hit();
 	}
 	
+	protected virtual void Hit()
+	{
+		if (hitTimer <= 0)
+			hitBool = false;
+		else
+			hitTimer -= Time.deltaTime;
+	}
 	void OnBecameInvisible()
 	{
 		Destroy(this.gameObject);
