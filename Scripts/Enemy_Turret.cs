@@ -11,10 +11,7 @@ public class Enemy_Turret : MonoBehaviour {
 	private float ComputerTime;
 	public AudioClip death;
 	public AudioClip fired;
-	
-	// Creates a vector to position the health and cooldown bars for each turret
-	protected Vector3 TurPos;
-	
+	protected Vector3 TurPos;// Creates a vector to position the health and cooldown bars for each turret
 	public float rotValue; // the rotational value at which the turrets spin, 1.0 to 5.0
 	
 	void Start () {
@@ -26,8 +23,7 @@ public class Enemy_Turret : MonoBehaviour {
 	}
 	
 	void Update () {
-		
-		
+	
 		if (coolDown <= 0)
 			RotateTurret();
 		else 
@@ -42,7 +38,6 @@ public class Enemy_Turret : MonoBehaviour {
 	}
 	void OnGUI()
 	{
-		
 		// Health Bar
 		GUI.BeginGroup(new Rect(0,0,Screen.width,Screen.height),"");
 			GUI.color = Color.red;
@@ -54,7 +49,6 @@ public class Enemy_Turret : MonoBehaviour {
 			GUI.color = Color.green;
 			GUI.VerticalScrollbar(new Rect(TurPos.x - 75,60,25,50),0,coolDown,0,randTime_CoolDown);
 		GUI.EndGroup();
-		
 	}
 	void OnTriggerEnter(Collider hit)
 	{
@@ -72,7 +66,6 @@ public class Enemy_Turret : MonoBehaviour {
 		{
 			rotValue *= -1;
 		}
-
 	}
 	private void Compute()
 	{
@@ -88,7 +81,6 @@ public class Enemy_Turret : MonoBehaviour {
 	{
 		if (coolDown <= 0)
 		{
-			Debug.Log("FIRED");
 			AudioSource.PlayClipAtPoint(fired,transform.position);
 			GameObject newBullet = (GameObject)Instantiate(bullet);
 			newBullet.transform.position = Turret_Barrel.transform.position;
@@ -97,12 +89,10 @@ public class Enemy_Turret : MonoBehaviour {
 			coolDown = randTime_CoolDown;
 		}
 	}
-	
 	private void CoolDownWeap()
 	{
 		if (coolDown <= 0)
 			return;
-		
 		else
 			coolDown -= Time.deltaTime;
 	}
