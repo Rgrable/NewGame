@@ -4,7 +4,7 @@ using System.Collections;
 public class StartMenu : MonoBehaviour {
 	public GUIStyle Menu_Tex = new GUIStyle();
 	public GUIStyle Text_Buttons = new GUIStyle();
-	public static bool VS_MODE = true;
+	public static bool VS_MODE;
 	public static bool TARGET_MODE;
 
 	void OnGUI()
@@ -15,6 +15,10 @@ public class StartMenu : MonoBehaviour {
 		{
 			VS_MODE = true;
 			Application.LoadLevel("TestBattle_Computer");
+		}
+		if (GUI.Button(new Rect(Screen.width / 2 - 590,Screen.height / 2 + 50,320,150),"QUIT",Text_Buttons))
+		{
+			Application.Quit();
 		}
 	}
 
