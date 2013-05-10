@@ -102,7 +102,6 @@ public class TurretScript : MonoBehaviour {
 		{
 			rotValue *= -1;
 		}
-
 	}
 	protected virtual void Compute()
 	{

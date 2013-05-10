@@ -19,8 +19,11 @@ public class ScoreKeeper : MonoBehaviour { // keeps track of player score along 
 	//
 	
 	// Misc
-	public GUIStyle gameOver_Text = new GUIStyle();
-	private float finishTime = 3.0f;
+	public static int OverallScore;
+	private float OverallScore_F; // used to show the score update slowly
+	private GUIStyle gameOver_Text = new GUIStyle();
+	private float finishTime = 5.0f;
+	
 	//
 	
 	void Start()
@@ -39,17 +42,11 @@ public class ScoreKeeper : MonoBehaviour { // keeps track of player score along 
 	}
 	void OnGUI()
 	{
-		if (VS_GameOver)
-		{
-			GUI.Label(new Rect(250,300,800,150),"GAMEOVER",gameOver_Text);
-			ReturntoStart();
-		}
-		if (VS_PlayerWin)
-		{
-			GUI.Label(new Rect(350,300,800,150),"WINNER",gameOver_Text);
-			ReturntoStart();
-		}
+		if (StartMenu.VS_MODE)
+			CheckVS();
 	}
+	// VS MODE CALLS/////////////////////////////////////////////////////
+	#region VS MODE
 	protected virtual void victoryCon_VS()
 	{
 		if (player_Death >= 4)
@@ -64,6 +61,34 @@ public class ScoreKeeper : MonoBehaviour { // keeps track of player score along 
 		}
 		
 	}
+	private void CheckVS()
+	{
+		if (VS_GameOver)
+		{
+			GUI.Label(new Rect(250,300,800,150),"GAMEOVER",gameOver_Text);
+			StartCoroutine(KeepPlayerScore());
+		}
+		if (VS_PlayerWin)
+		{
+			GUI.Label(new Rect(350,300,800,150),"WINNER",gameOver_Text);
+			StartCoroutine(KeepPlayerScore());
+		}
+	}
+	#endregion
+	// //////////////////////////////////////////////////////////////////////
+	private IEnumerator KeepPlayerScore()
+	{
+		GUI.Label(new Rect(300,500,800,150),"SCORE: +" + OverallScore_F.ToString("F0"),gameOver_Text);
+		OverallScore += enemy_Death;
+		yield return new WaitForSeconds(0);
+		if (OverallScore_F < enemy_Death)
+		{
+			OverallScore_F += 0.1f;
+		}
+		else
+			ReturntoStart();
+		
+	}
 	private void ReturntoStart()
 	{
 		if (finishTime <= 0)
@@ -76,6 +101,7 @@ public class ScoreKeeper : MonoBehaviour { // keeps track of player score along 
 	}
 	private void ResetGame()
 	{
+		OverallScore_F = 0;
 		player_Death = 0;
 		enemy_Death = 0;
 		VS_GameOver = false;
