@@ -19,10 +19,10 @@ public class ScoreKeeper : MonoBehaviour { // keeps track of player score along 
 	//
 	
 	// Misc
-	public static int OverallScore;
+	public static int OverallScore; // Contains the players Highscore
 	private float OverallScore_F; // used to show the score update slowly
 	private GUIStyle gameOver_Text = new GUIStyle();
-	private float finishTime = 5.0f;
+	private float finishTime = 5.0f; // How long the gameover / winner screen is open
 	
 	//
 	
@@ -59,7 +59,6 @@ public class ScoreKeeper : MonoBehaviour { // keeps track of player score along 
 			VS_PlayerWin = true;
 			gameOver_Text.normal.textColor = new Color(0,256,0);
 		}
-		
 	}
 	private void CheckVS()
 	{
@@ -87,7 +86,6 @@ public class ScoreKeeper : MonoBehaviour { // keeps track of player score along 
 		}
 		else
 			ReturntoStart();
-		
 	}
 	private void ReturntoStart()
 	{
