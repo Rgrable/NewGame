@@ -15,13 +15,15 @@ public class Ricochet : MonoBehaviour {
 		
 		if (wall.transform.name == "SideWall")
 		{
-			newVelocity.x *= -1.0f;
+			newVelocity.x *= -0.9f;
 			transform.rigidbody.velocity = newVelocity;
+			transform.rigidbody.mass -= 0.1f;
 			AudioSource.PlayClipAtPoint(bounce,transform.position);
 		}
 		else if (wall.transform.name == "BackWall")
 		{
-			newVelocity.z *= -1.0f;
+			newVelocity.z *= -0.9f;
+			transform.rigidbody.mass -= 0.1f;
 			transform.rigidbody.velocity = newVelocity;
 			AudioSource.PlayClipAtPoint(bounce,transform.position);
 		}

@@ -7,7 +7,8 @@ public class Player_1_Turret : TurretScript {
 		
 		turHealth = 50;
 		Turret_Head = this.gameObject;
-		bullet = Resources.Load("Bullet_Standard",typeof(GameObject));
+		bullet = (GameObject)Resources.Load("Bullet_Standard");
+		explosion = (GameObject)Resources.Load("Explosion_1");
 		rotValue_Min = 1.0f;
 		rotValue_Max = 3.1f;
 		player = true;

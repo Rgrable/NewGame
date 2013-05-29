@@ -21,6 +21,7 @@ public class ScoreKeeper : MonoBehaviour { // keeps track of player score along 
 	// Misc
 	public static int OverallScore; // Contains the players Highscore
 	private float OverallScore_F; // used to show the score update slowly
+	private bool Overall_B; // runs the keepPlayerScore call once.
 	private GUIStyle gameOver_Text = new GUIStyle();
 	private float finishTime = 5.0f; // How long the gameover / winner screen is open
 	
@@ -64,33 +65,42 @@ public class ScoreKeeper : MonoBehaviour { // keeps track of player score along 
 	{
 		if (VS_GameOver)
 		{
-			GUI.Label(new Rect(250,300,800,150),"GAMEOVER",gameOver_Text);
-			StartCoroutine(KeepPlayerScore());
+			Destroy(GameObject.FindGameObjectWithTag("Bullet"));
+			GUI.Label(new Rect(0,0,800,150),"GAMEOVER",gameOver_Text);
+			if (!Overall_B)
+				KeepPlayerScore();
+			else
+				return;
 		}
 		if (VS_PlayerWin)
 		{
-			GUI.Label(new Rect(350,300,800,150),"WINNER",gameOver_Text);
-			StartCoroutine(KeepPlayerScore());
+			Destroy(GameObject.FindGameObjectWithTag("Bullet"));
+			GUI.Label(new Rect(0,0,800,150),"WINNER",gameOver_Text);
+			if (!Overall_B)
+				KeepPlayerScore();
+			else
+				return;
 		}
 	}
 	#endregion
 	// //////////////////////////////////////////////////////////////////////
-	private IEnumerator KeepPlayerScore()
+	private void KeepPlayerScore()
 	{
-		GUI.Label(new Rect(300,500,800,150),"SCORE: +" + OverallScore_F.ToString("F0"),gameOver_Text);
-		OverallScore += enemy_Death;
-		yield return new WaitForSeconds(0);
+		GUI.Label(new Rect(0,200,800,150),"SCORE: +" + OverallScore_F.ToString("F0"),gameOver_Text);
 		if (OverallScore_F < enemy_Death)
 		{
 			OverallScore_F += 0.1f;
 		}
 		else
+		{
 			ReturntoStart();
+		}
 	}
 	private void ReturntoStart()
 	{
 		if (finishTime <= 0)
 		{
+			OverallScore += (int)OverallScore_F;
 			Application.LoadLevel("StartMenu");
 			ResetGame();
 		}
@@ -99,6 +109,7 @@ public class ScoreKeeper : MonoBehaviour { // keeps track of player score along 
 	}
 	private void ResetGame()
 	{
+		Overall_B = false;
 		OverallScore_F = 0;
 		player_Death = 0;
 		enemy_Death = 0;

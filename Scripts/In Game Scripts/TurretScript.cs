@@ -6,7 +6,8 @@ public class TurretScript : MonoBehaviour {
 	public Transform Turret_Barrel;
 	protected float turHealth;
 	protected float coolDown = 0.5f;
-	public Object bullet;
+	public GameObject bullet;
+	protected GameObject explosion;
 	public GUIStyle TURRET_FIRE;
 	protected float randTime_CoolDown = 0.5f;
 	// Audio
@@ -78,7 +79,7 @@ public class TurretScript : MonoBehaviour {
 			GUI.color = Color.white;
 			if (player)
 			{
-				if (GUI.Button(new Rect(TurPos.x - 35,575,100,100),"",TURRET_FIRE))
+				if (GUI.RepeatButton(new Rect(TurPos.x - 35,575,100,100),"",TURRET_FIRE))
 					{
 						FireWeapon();
 					}
@@ -151,6 +152,7 @@ public class TurretScript : MonoBehaviour {
 				
 			Destroy(this.gameObject);
 			AudioSource.PlayClipAtPoint(death,transform.position);
+			Instantiate(explosion,transform.position,new Quaternion(90,0,0,-90));
 			
 		}
 	}
