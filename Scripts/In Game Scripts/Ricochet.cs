@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Ricochet : MonoBehaviour {
 	public AudioClip bounce;
+	public int damageMultiplier;
 	
 	void Update () {
 		
@@ -13,19 +14,19 @@ public class Ricochet : MonoBehaviour {
 	{
 		Vector3 newVelocity = transform.rigidbody.velocity;
 		
-		if (wall.transform.name == "SideWall")
+		if (wall.transform.gameObject.name.Contains("_SideWall"))
 		{
-			newVelocity.x *= -0.9f;
+			newVelocity.x *= -1.01f;
 			transform.rigidbody.velocity = newVelocity;
-			transform.rigidbody.mass -= 0.1f;
 			AudioSource.PlayClipAtPoint(bounce,transform.position);
+			damageMultiplier++;
 		}
-		else if (wall.transform.name == "BackWall")
+		else if (wall.transform.gameObject.name.Contains("_BackWall"))
 		{
-			newVelocity.z *= -0.9f;
-			transform.rigidbody.mass -= 0.1f;
+			newVelocity.z *= -1.01f; 
 			transform.rigidbody.velocity = newVelocity;
 			AudioSource.PlayClipAtPoint(bounce,transform.position);
+            damageMultiplier++;
 		}
 	}
 	

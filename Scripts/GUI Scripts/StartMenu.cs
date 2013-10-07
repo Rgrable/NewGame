@@ -2,34 +2,92 @@ using UnityEngine;
 using System.Collections;
 
 public class StartMenu : MonoBehaviour {
-	public GUIStyle Menu_Tex = new GUIStyle();
-	public GUIStyle Text_Buttons = new GUIStyle();
-	public GUIStyle HS_Style = new GUIStyle();
-	public static bool VS_MODE;
-	public static bool TARGET_MODE;
-	private Vector2 pivot;
-	private bool growing_T;
-
-	void OnGUI()
+	
+	public TextMesh T_PlayerName,T_WagerAmount, T_CoinAmount, T_WinLoss, T_Level;
+	public int coins; 
+	public GameObject LevelBar;
+	
+	
+	void Start()
 	{
-		GUI.Label(new Rect(0,0,Screen.width,Screen.height),"",Menu_Tex);
-		
-		GUI.BeginGroup(new Rect(0,0,Screen.width,Screen.height));
-		GUIUtility.RotateAroundPivot(15,pivot);
-		GUI.Label(new Rect(800,100,700,300),"YOU'VE DESTROYED \n" + ScoreKeeper.OverallScore.ToString() + " Enemies!!",HS_Style);
-		GUIUtility.RotateAroundPivot(-15,pivot);
-		GUI.EndGroup();
-		
-		
-		if (GUI.Button(new Rect(Screen.width / 2 - 590,Screen.height / 2 - 100,320,150),"PLAY",Text_Buttons))
+		coins = GlobalVars.coinAmount;
+		GlobalVars.HardReset();
+		GlobalVars.WagerRound = 0;
+		GlobalVars.RoundNumber = 1;
+		GlobalVars._TempWins = 0;
+		GlobalVars._TempLoss = 0;
+	}
+	
+	void Update()
+	{
+		CheckInput();
+		SetStrings();
+		CheckLevel();
+	}
+	
+	private void SetStrings()
+	{
+		T_WagerAmount.text = GlobalVars.WagerRound.ToString();
+		T_CoinAmount.text = "Coins: " + coins.ToString();
+		T_WinLoss.text = GlobalVars._playerScore_Wins.ToString() + "/" + GlobalVars._playerScore_Losses.ToString();
+		T_Level.text = "Level: " + GlobalVars.playerLevel.ToString();
+		T_PlayerName.text = GlobalVars.playerName;
+	}
+	
+	private void CheckLevel()
+	{
+		LevelBar.transform.localScale = new Vector3(0.9f,(GlobalVars.playerLevelBar / GlobalVars.playerProgressNeeded) * 11.5f,0.9f);
+	}
+	
+	private void CheckInput()
+	{
+		if (Input.GetMouseButtonDown(0))
 		{
-			VS_MODE = true;
-			Application.LoadLevel("TestBattle_Computer");
-		}
-		if (GUI.Button(new Rect(Screen.width / 2 - 590,Screen.height / 2 + 50,320,150),"QUIT",Text_Buttons))
-		{
-			Application.Quit();
+	
+			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			RaycastHit hit;
+			
+			if (Physics.Raycast(ray, out hit))
+			{
+				if (hit.transform.name == "PlayGame")
+				{
+					Application.LoadLevel("Game");
+				}
+				
+				if (hit.transform.name == "Wager Begin")
+				{
+					GlobalVars.coinAmount -= GlobalVars.WagerRound;
+					Application.LoadLevel("Wager Match");
+				}
+				
+				if (hit.transform.name == "Wager Left")
+				{
+					if (GlobalVars.WagerRound <= 0)
+					{
+						GlobalVars.WagerRound = GlobalVars.coinAmount;
+						coins = 0;
+					}
+					else
+					{
+						GlobalVars.WagerRound--;
+						coins++;
+					}
+				}
+				if (hit.transform.name == "Wager Right")
+				{
+					if (GlobalVars.WagerRound >= GlobalVars.coinAmount)
+					{
+						GlobalVars.WagerRound = 0;
+						coins = GlobalVars.coinAmount;
+					}
+					else
+					{
+						GlobalVars.WagerRound++;
+						coins--;
+					}
+				}
+			}
 		}
 	}
-
+	
 }
